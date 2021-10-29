@@ -1596,54 +1596,45 @@ if __name__ == "__main__":
         pickle.dump([pos_vocab, char_vocab], output)
         output.close()
 
-        if train_on_full_data:
-            train_data = get_data(all_samples, 1)
-            custom_print('Training data size:', len(train_data))
-        else:
-            random.shuffle(all_samples)
-            cut_point = int(dev_percent * len(all_samples))
-            dev_data = get_data(all_samples[: cut_point], 2)
-            train_data = get_data(all_samples[cut_point:], 1)
-            custom_print('Training data size:', len(train_data))
-            custom_print('Development data size:', len(dev_data))
+        random.shuffle(all_samples)
+        cut_point = int(dev_percent * len(all_samples))
+        dev_data = get_data(all_samples[: cut_point], 2)
+        train_data = get_data(all_samples[cut_point:], 1)
+        custom_print('Training data size:', len(train_data))
+        custom_print('Development data size:', len(dev_data))
 
-        test_data = None
-        if dataset_name == datasets[0]:
-            test_file = os.path.join(src_data_folder, test_file_name)
-            test_samples = open(test_file).readlines()
-            test_data = get_data(test_samples, 3)
-            custom_print('Test data size:', len(test_data))
+        test_file = os.path.join(src_data_folder, test_file_name)
+        test_samples = open(test_file).readlines()
+        test_data = get_data(test_samples, 3)
+        custom_print('Test data size:', len(test_data))
 
         custom_print("Training started......")
         custom_print('Max cardinality:', max_cardinality)
         custom_print('Max span:', max_span)
         model_file_name = os.path.join(trg_data_folder, 'model.h5py')
-        if train_on_full_data:
-            train_model(model_name, train_data, None, None, model_file_name)
-        else:
-            train_model(model_name, train_data, dev_data, test_data, model_file_name)
-            custom_print("\n\nPrediction......")
-            best_model = get_model(model_name)
-            if torch.cuda.is_available():
-                best_model.cuda()
-            if n_gpu > 1:
-                best_model = torch.nn.DataParallel(best_model)
-            best_model.load_state_dict(torch.load(model_file_name))
 
-            custom_print('\nDev Results\n')
-            dev_preds = predict(dev_data, best_model, model_name)
-            dev_f1 = get_F1(dev_data, dev_preds)
-            write_test_res(dev_data, dev_preds, os.path.join(trg_data_folder, 'dev_out.json'))
+        train_model(model_name, train_data, dev_data, test_data, model_file_name)
+        custom_print("\n\nPrediction......")
+        best_model = get_model(model_name)
+        if torch.cuda.is_available():
+            best_model.cuda()
+        if n_gpu > 1:
+            best_model = torch.nn.DataParallel(best_model)
+        best_model.load_state_dict(torch.load(model_file_name))
 
-            if dataset_name == datasets[0]:
-                custom_print('\nTest Results\n')
-                test_preds = predict(test_data, best_model, model_name)
-                test_f1 = get_F1(test_data, test_preds)
-                write_test_res(test_data, test_preds, os.path.join(trg_data_folder, 'test_out.json'))
+        custom_print('\nDev Results\n')
+        dev_preds = predict(dev_data, best_model, model_name)
+        dev_f1 = get_F1(dev_data, dev_preds)
+        write_test_res(dev_data, dev_preds, os.path.join(trg_data_folder, 'dev_out.json'))
+
+        custom_print('\nTest Results\n')
+        test_preds = predict(test_data, best_model, model_name)
+        test_f1 = get_F1(test_data, test_preds)
+        write_test_res(test_data, test_preds, os.path.join(trg_data_folder, 'test_out.json'))
 
         logger.close()
 
-    if dataset_name in datasets[1:] and job_mode == 'train5fold':
+    if job_mode == 'train5fold':
         logger = open(os.path.join(trg_data_folder, 'training.log'), 'w')
         custom_print('Experiment time: ', datetime.datetime.now())
         custom_print(sys.argv)
