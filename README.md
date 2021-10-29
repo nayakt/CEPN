@@ -7,6 +7,22 @@ This repo contains the code and data for causality extraction task.
 3) CUDA 10.1
 4) Transformers 3.5.0
 
+### Dataset ###
+
+https://drive.google.com/drive/folders/1DGmljtCkvNY2PUzZH94G74agPNyMoKPi?usp=sharing
+
+5 fold splits for FinCausal2020 and FinCausal2021 is given in the above location. Use data_prep.py to convert them into the proper format for our code.
+
+python3.6 data_prep.py in_file_csv out_file_json out_bert_file_json bert_tokenizer_name
+
+in_file_csv: csv file in the splits
+
+out_file_json: intermediate non-beat json file
+
+out_bert_file_json: json file with BERT tokens. This file is used by cepn.py to train and test the model.
+
+bert_tokenizer_name: bert-base-cased or bert-large-cased
+
 ### How to run ###
 
 CEPN_Base
@@ -26,3 +42,4 @@ CEPN_Large
 	python3.6 cepn.py FinCausal2021 config_large.ini target_dir train5fold
 
 target_dir: Some directory where model and other output files are saved.
+
