@@ -44,8 +44,13 @@ target_dir: Some directory where model and other output files are saved.
 If you use the source code or models from this work, please cite our paper:
 
 @inproceedings{nayak2022cepn,
+
   author    = {Tapas Nayak, Soumya Sharma, Yash Butala, Koustuv Dasgupta, Pawan Goyal, and Niloy Ganguly},
+
   title     = {A Generative Approach for Financial Causality Extraction},
+
   booktitle = {Proceedings of The 2nd Workshop on Financial Technology on the Web (FinWeb)},
+
   year      = {2022}
+
 }
