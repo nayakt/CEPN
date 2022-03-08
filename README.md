@@ -27,15 +27,11 @@ bert_tokenizer_name: bert-base-cased or bert-large-cased
 
 CEPN_Base
 
-	python3.6 cepn.py SemEval config.ini target_dir train
-
 	python3.6 cepn.py FinCausal2020 config.ini target_dir train5fold
 
 	python3.6 cepn.py FinCausal2021 config.ini target_dir train5fold
 
 CEPN_Large
-
-	python3.6 cepn.py SemEval config_large.ini target_dir train
 
 	python3.6 cepn.py FinCausal2020 config_large.ini target_dir train5fold
 
@@ -43,3 +39,13 @@ CEPN_Large
 
 target_dir: Some directory where model and other output files are saved.
 
+### Publication ###
+
+If you use the source code or models from this work, please cite our paper:
+
+@inproceedings{nayak2022cepn,
+  author    = {Tapas Nayak, Soumya Sharma, Yash Butala, Koustuv Dasgupta, Pawan Goyal, and Niloy Ganguly},
+  title     = {A Generative Approach for Financial Causality Extraction},
+  booktitle = {Proceedings of The 2nd Workshop on Financial Technology on the Web (FinWeb)},
+  year      = {2022}
+}
